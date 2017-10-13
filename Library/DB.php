@@ -50,6 +50,16 @@ class DB
 		
 		return $this;
 	}
+	public function innerJoin($table,$option){
+		$this->_query.=" INNER JOIN {$table} ON {$option}";
+		
+		return $this;
+	}
+	public function rightJoin($table,$option){
+		$this->_query.=" RIGHT JOIN {$table} ON {$option}";
+		
+		return $this;
+	}
 	public function having($option,$param){
 		if( !is_array($param)){
 			 array_push($this->_param,$param);
@@ -65,6 +75,7 @@ class DB
 	}
 	public function fetchQuery($q){
 			$q = $q->_query	;
+
 			$type=array();
 			$wherebind = "";
 			$st = $this->_connection->prepare($q);
