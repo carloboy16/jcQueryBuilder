@@ -45,9 +45,24 @@ class DB
 		 $this->_query.= " Order by {$option} ";
 		return $this;
 	}
+	public function leftJoin($table,$option){
+		$this->_query.=" LEFT JOIN {$table} ON {$option}";
+		
+		return $this;
+	}
+	public function having($option,$param){
+		if( !is_array($param)){
+			 array_push($this->_param,$param);
+		}
+	   if(strpos($this->_query,'HAVING')){
+		 	$this->_query.= " AND {$option} ";
+		 }else{
+		 	 $this->_query.= " HAVING {$option} ";
+		 }
+		 return $this;
+	}
 	public function fetchQuery($q){
 			$q = $q->_query	;
-			
 			$type=array();
 			$wherebind = "";
 			$st = $this->_connection->prepare($q);
@@ -62,7 +77,7 @@ class DB
 			for($i=0;$i<count($this->_param);$i++) {
 			$input[]= &$this->_param[$i] ;
 			}
-			// var_dump($input);
+			
 			call_user_func_array(array($st,'bind_param'),$input);
 
 				
