@@ -78,6 +78,16 @@ class DB
 
 		 
 	}
+	public function querySelect($q){
+		$st = $this->_connection->prepare($q);
+		$st->execute();
+		$res = $st->get_result();
+		$ress= array();
+		while ($a = $res->fetch_assoc()) {
+			$ress[] = $a;
+		}
+		return json_decode(json_encode($ress));
+	}
 	public function fetchQuery($q){
 			$q = $q->_query	;
 
