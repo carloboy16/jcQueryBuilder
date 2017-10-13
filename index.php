@@ -5,5 +5,5 @@ $a = $db->fetchQuery($db->select('user', 'sample.desc as gg')
 	                    ->rightJoin('sample',"sample.user_id = user.user_id")
 	                    ->having('gg = ?','asdasdasdasdasdasdasd')
 	                    );
-var_dump($db->Insert('a','b'));
+var_dump($db->Insert(array('');,'b'));
  ?>

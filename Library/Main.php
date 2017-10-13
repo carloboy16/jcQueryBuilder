@@ -1,6 +1,6 @@
 <?php 
 namespace Library;
-class Main  extends Insert
+class Main  extends Delete
 {
 	
 	function __construct()
