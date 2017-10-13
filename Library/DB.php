@@ -60,6 +60,7 @@ class DB
 		 	 $this->_query.= " HAVING {$option} ";
 		 }
 		 return $this;
+
 		 
 	}
 	public function fetchQuery($q){
