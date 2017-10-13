@@ -1,4 +1,7 @@
 <?php 
+/*
+Created By: John Carlo Salazar
+*/
 namespace Library;
 class DB 
 {
