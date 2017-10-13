@@ -5,11 +5,13 @@ class DB
 	protected $_connection;
 	protected $_query = '';
 	protected $_param = array();
+	public $db;
 	function __construct()
 	{	
 		global $DB_C;
-		// var_dump($DB_C);
 		$this->_connection =new \mysqli($DB_C['HOST'],$DB_C['USER'],$DB_C['PASSWORD'],$DB_C['DB']);
+		// $this->db =  \Library\Insert::create();
+
 	}
 	public function select($table,$option = ""){
 		$option = $option== null ||$option=="" ? "*":$option;
