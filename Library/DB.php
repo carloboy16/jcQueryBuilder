@@ -8,13 +8,29 @@ class DB
 	protected $_connection;
 	protected $_query = '';
 	protected $_param = array();
-	public $db;
 	function __construct()
 	{	
 		global $DB_C;
 		$this->_connection =new \mysqli($DB_C['HOST'],$DB_C['USER'],$DB_C['PASSWORD'],$DB_C['DB']);
 		// $this->db =  \Library\Insert::create();
-
+	}
+	public function insert($table,$data){
+		$col = array();
+		$val = array();
+		foreach ($data as $c => $v) {
+			array_push($col, $c);
+			array_push($val, $v);
+		}
+		$col = &implode($col,"','");
+		$val_data = &implode($val,'","');
+		$data_type = array();
+		foreach ($val as $d) {
+			$data_type[] = $this->GetType($d); 
+		}
+		$data_type = implode($data_type,',');
+		$this->_query.="INSERT INTO {$table}({$col}) values({$data_type})";
+		
+		var_dump($this->_query);
 	}
 	public function select($table,$option = ""){
 		$option = $option== null ||$option=="" ? "*":$option;
@@ -86,7 +102,7 @@ class DB
 		while ($a = $res->fetch_assoc()) {
 			$ress[] = $a;
 		}
-		return json_decode(json_encode($ress));
+		return (object) ($ress);
 	}
 	public function fetchQuery($q){
 			$q = $q->_query	;
@@ -97,7 +113,7 @@ class DB
 			// var_dump($this->_param);
 			if($this->_param != null || count($this->_param) != 0){
 			foreach ($this->_param as $par) {
-			 $type[]=$this->GetType(gettype($par));
+			 $type[]=$this->GetType($par);
 			}
 			$input = array();
 			$input[] = &implode($type);
@@ -119,7 +135,7 @@ class DB
 			}
 			$this->_query = '';
 			$this->_param = array();
-			return json_decode(json_encode($d));
+			return (object) ($d);
 
 	}
 	Private function GetType($Item)
