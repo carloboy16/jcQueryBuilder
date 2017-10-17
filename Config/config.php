@@ -2,7 +2,7 @@
 
 $DB_C = array('HOST' => 'localhost',
 			'USER' => 'root',
-			'PASSWORD'=>'',
+			'PASSWORD'=>'cdefgabc',
 			'DB'=>'jcbackend'
 			 );
 
