@@ -14,7 +14,11 @@ class DB
 		$this->_connection =new \mysqli($DB_C['HOST'],$DB_C['USER'],$DB_C['PASSWORD'],$DB_C['DB']);
 		// $this->db =  \Library\Insert::create();
 	}
+	
 	public function insert($table,$data){
+		if($data === null || $data===""){
+			return false;
+		}
 		$col = array();
 		$val = array();
 		$input = array();
@@ -113,7 +117,7 @@ class DB
 
 		 
 	}
-	public function querySelect($q){
+	public function query($q){
 		$st = $this->_connection->prepare($q);
 		$st->execute();
 		$res = $st->get_result();

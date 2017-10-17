@@ -6,7 +6,7 @@ $db = new Library\DB();
 	                    ->where('username = ?','asd'));*/
 $a = $db->insert('user',array(
 			'username'=>'carlo',
-			'password'=>'12345',
+			'password'=>'1234512',
 		    'email'=>'carloboy16@gmail.com'));
 var_dump($a);
 ?>
