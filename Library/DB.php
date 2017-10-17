@@ -17,20 +17,39 @@ class DB
 	public function insert($table,$data){
 		$col = array();
 		$val = array();
+		$input = array();
 		foreach ($data as $c => $v) {
 			array_push($col, $c);
 			array_push($val, $v);
 		}
-		$col = &implode($col,"','");
-		$val_data = &implode($val,'","');
+		$col = &implode($col,",");
 		$data_type = array();
 		foreach ($val as $d) {
 			$data_type[] = $this->GetType($d); 
 		}
-		$data_type = implode($data_type,',');
-		$this->_query.="INSERT INTO {$table}({$col}) values({$data_type})";
+		$value = implode($data_type);
+		$question_mark = array();
+		foreach ($data_type as $dt) {
+			$question_mark[] = '?';
+		}
+		$question_mark = implode($question_mark,',');
+
+		$q="INSERT INTO {$table}({$col}) VALUES({$question_mark})";
 		
-		var_dump($this->_query);
+		$st = $this->_connection->prepare($q);
+		$input[]=&$value;
+
+		for($i = 0;$i<count($val);$i++){
+			$input[]= &$val[$i];
+		}
+		
+		
+		call_user_func_array(array($st,'bind_param'),$input);
+
+		if($st->execute()){
+
+		}
+		return $st->insert_id;
 	}
 	public function select($table,$option = ""){
 		$option = $option== null ||$option=="" ? "*":$option;
@@ -110,7 +129,7 @@ class DB
 			$type=array();
 			$wherebind = "";
 			$st = $this->_connection->prepare($q);
-			// var_dump($this->_param);
+			
 			if($this->_param != null || count($this->_param) != 0){
 			foreach ($this->_param as $par) {
 			 $type[]=$this->GetType($par);
@@ -123,10 +142,8 @@ class DB
 			}
 			
 			call_user_func_array(array($st,'bind_param'),$input);
-
-				
 			}
-			;
+			
 			$st->execute();
 			$res = $st->get_result();
 			$d = array();
@@ -135,6 +152,7 @@ class DB
 			}
 			$this->_query = '';
 			$this->_param = array();
+			
 			return (object) ($d);
 
 	}

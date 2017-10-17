@@ -1,7 +1,9 @@
 <?php 
 include_once('Config/config.php');
-$db = new Library\Main();
-// $a = $db->fetchQuery($db->select('user', 'user.username as gg'));
+$db = new Library\DB();
+/*$a = $db->fetchQuery($db->select('user', 'user.username as gg')
+	                    ->where('user_id = ?','1')
+	                    ->where('username = ?','asd'));*/
 $a = $db->insert('user',array(
 			'username'=>'carlo',
 			'password'=>'12345',
