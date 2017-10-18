@@ -12,9 +12,66 @@ class DB
 	{	
 		global $DB_C;
 		$this->_connection =new \mysqli($DB_C['HOST'],$DB_C['USER'],$DB_C['PASSWORD'],$DB_C['DB']);
-		// $this->db =  \Library\Insert::create();
+		
 	}
-	
+	public function delete($table){
+		$this->_query = "DELETE FROM {$table}";
+		return $this;
+	}
+	public function run(){
+		$q =  $this->_query;
+		$s = $this->_connection->prepare($q);
+		foreach ($this->_param as $val) {
+			$type[] = $this->GetType($val);
+		}
+		
+		$input = array();
+		$input[] = &implode($type);
+		for($i=0;$i<count($this->_param);$i++){
+			$input[]= &$this->_param[$i];
+		}
+		call_user_func_array(array($s,'bind_param'), $input);
+		if($s->execute()){
+			return $s->affected_rows == 1 ? !0: !1;
+		}
+
+	}
+	public function fetchQuery($q){
+			$q = $q->_query	;
+
+			$type=array();
+			$wherebind = "";
+			$st = $this->_connection->prepare($q);
+			
+			if($this->_param != null || count($this->_param) != 0){
+			foreach ($this->_param as $par) {
+			 $type[]=$this->GetType($par);
+			}
+			$input = array();
+			$input[] = &implode($type);
+			
+			for($i=0;$i<count($this->_param);$i++) {
+			$input[]= &$this->_param[$i] ;
+			}
+			
+			call_user_func_array(array($st,'bind_param'),$input);
+			}
+			
+			$st->execute();
+			$res = $st->get_result();
+			$d = array();
+			while($i = $res->fetch_assoc()){
+				$d[] = (object) $i;
+			}
+			$this->clear();
+			
+			return (object) ($d);
+
+	}
+	protected function clear(){
+		$this->_query = '';
+		$this->_param = array();
+	}
 	public function insert($table,$data){
 		if($data === null || $data===""){
 			return false;
@@ -127,39 +184,7 @@ class DB
 		}
 		return (object) ($ress);
 	}
-	public function fetchQuery($q){
-			$q = $q->_query	;
-
-			$type=array();
-			$wherebind = "";
-			$st = $this->_connection->prepare($q);
-			
-			if($this->_param != null || count($this->_param) != 0){
-			foreach ($this->_param as $par) {
-			 $type[]=$this->GetType($par);
-			}
-			$input = array();
-			$input[] = &implode($type);
-			
-			for($i=0;$i<count($this->_param);$i++) {
-			$input[]= &$this->_param[$i] ;
-			}
-			
-			call_user_func_array(array($st,'bind_param'),$input);
-			}
-			
-			$st->execute();
-			$res = $st->get_result();
-			$d = array();
-			while($i = $res->fetch_assoc()){
-				$d[] = $i;
-			}
-			$this->_query = '';
-			$this->_param = array();
-			
-			return (object) ($d);
-
-	}
+	
 	Private function GetType($Item)
 	{
     switch (gettype($Item)) {
