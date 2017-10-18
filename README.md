@@ -3,6 +3,7 @@
 Configure the /Config/config.php
 <br>
 <h1>How to Query?</h1><br>
+<h2>Selecting Data</h2>
 $q  = new \Library\DB();<br>
 Selecting data:
 $result = $q->fetchQuery($Q->select('table','table.column')->where('column= ?','1'));
