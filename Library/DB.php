@@ -36,7 +36,6 @@ class DB
 		call_user_func_array(array($s,'bind_param'), $input);
 		}
 		else{
-			// $s->bind_param('s','');
 		}
 		
 		if($s->execute()){
