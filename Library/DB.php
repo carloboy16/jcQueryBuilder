@@ -14,10 +14,6 @@ class DB
 		$this->_connection =new \mysqli($DB_C['HOST'],$DB_C['USER'],$DB_C['PASSWORD'],$DB_C['DB']);
 		
 	}
-	public function delete($table){
-		$this->_query = "DELETE FROM {$table}";
-		return $this;
-	}
 	public function run(){
 		$q =  $this->_query;
 		$s = $this->_connection->prepare($q);
@@ -32,10 +28,37 @@ class DB
 		}
 		call_user_func_array(array($s,'bind_param'), $input);
 		if($s->execute()){
+			$this->clear();
 			return $s->affected_rows == 1 ? !0: !1;
+		}else{
+			return 'failed to query';
 		}
 
+
+
 	}
+	public function update($table){
+		$this->_query = "UPDATE {$table}";
+		return $this;
+	}
+	function set($option,$param){
+		if( !is_array($param)){
+			 array_push($this->_param,$param);
+		}
+		 if(strpos($this->_query,'SET')){
+		 	$this->_query.= ", {$option} ";
+		 }else{
+		 	 $this->_query.= " SET {$option}";
+		 }
+		
+		 return $this;
+	}
+	public function delete($table){
+		$this->_query = "DELETE FROM {$table}";
+		return $this;
+	}
+
+	
 	public function fetchQuery($q){
 			$q = $q->_query	;
 

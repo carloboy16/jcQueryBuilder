@@ -24,6 +24,15 @@ $q->delete('table') <br>
 
 	
 </div>
+<div>
+	<h2>Updating Data</h2>
+$q = $db->update('table') <br>
+        ->set('username = ?','carloboy16') <br>
+        ->set('password = ?',"xx") <br>
+        ->where('user_id = ?','3') <br>
+        ->where('email = ?','gg@mail.com') <br>
+        ->run();
+</div>
 <br>
 
 
