@@ -29,7 +29,8 @@ class DB
 		}
 		
 		$input = array();
-		$input[] = &implode($type);
+		$input = implode($type);
+		$input[] = &$input;
 		for($i=0;$i<count($this->_param);$i++){
 			$input[]= &$this->_param[$i];
 		}
