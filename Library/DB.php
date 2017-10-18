@@ -14,9 +14,16 @@ class DB
 		$this->_connection =new \mysqli($DB_C['HOST'],$DB_C['USER'],$DB_C['PASSWORD'],$DB_C['DB']);
 		
 	}
+	public function truncate($table){
+		$this->_query.="TRUNCATE TABLE {$table}";
+		return $this;
+	}
 	public function run(){
+		// var_dump(count($this->_param));
+		
 		$q =  $this->_query;
 		$s = $this->_connection->prepare($q);
+	   if(count($this->_param)!=0){
 		foreach ($this->_param as $val) {
 			$type[] = $this->GetType($val);
 		}
@@ -27,6 +34,11 @@ class DB
 			$input[]= &$this->_param[$i];
 		}
 		call_user_func_array(array($s,'bind_param'), $input);
+		}
+		else{
+			// $s->bind_param('s','');
+		}
+		
 		if($s->execute()){
 			$this->clear();
 			return $s->affected_rows == 1 ? !0: !1;
@@ -54,7 +66,7 @@ class DB
 		 return $this;
 	}
 	public function delete($table){
-		$this->_query = "DELETE FROM {$table}";
+		$this->_query = "DELETE  FROM {$table}";
 		return $this;
 	}
 
@@ -71,7 +83,8 @@ class DB
 			 $type[]=$this->GetType($par);
 			}
 			$input = array();
-			$input[] = &implode($type);
+			$type = implode($type);
+			$input[] = &$type;
 			
 			for($i=0;$i<count($this->_param);$i++) {
 			$input[]= &$this->_param[$i] ;
@@ -106,7 +119,8 @@ class DB
 			array_push($col, $c);
 			array_push($val, $v);
 		}
-		$col = &implode($col,",");
+		$col =implode($col,",");
+		$col = &$col;
 		$data_type = array();
 		foreach ($val as $d) {
 			$data_type[] = $this->GetType($d); 
@@ -121,6 +135,7 @@ class DB
 		$q="INSERT INTO {$table}({$col}) VALUES({$question_mark})";
 		
 		$st = $this->_connection->prepare($q);
+
 		$input[]=&$value;
 
 		for($i = 0;$i<count($val);$i++){
